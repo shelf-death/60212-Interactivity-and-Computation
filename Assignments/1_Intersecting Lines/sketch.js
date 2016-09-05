@@ -1,6 +1,5 @@
 //functional
-var w = 400;                //canvas width
-var h = 400;                //canvas height
+var h = 300;                //canvas height
 var lineArray = [];
 var numLines = 20;          //number of lines
 var magnitude = w / 2;      //maximum length of line
