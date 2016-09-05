@@ -1,4 +1,5 @@
 //functional
+var w = 533;                //canvas width
 var h = 300;                //canvas height
 var lineArray = [];
 var numLines = 20;          //number of lines
