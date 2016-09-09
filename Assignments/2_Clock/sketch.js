@@ -2,8 +2,9 @@ var w = 400;
 var h = 400;
 
 var numParticles = 100;
-var pStep = 1;
+var pStep = 50;
 var particleArray = [];
+var myTree;
 
 var sec, prevSec;
 
@@ -12,9 +13,10 @@ var sec, prevSec;
 function setup() {
 
 	createCanvas(w, h);
-	t = new Tree(width/2,height/2);
+	myTree = new Tree(width/2,height/2);
  sec = second();
 	prevSec = sec;
+	
 	
 }
 /////////////////////////////////DRAW//////////////////////////
@@ -26,61 +28,74 @@ function draw() {
 		prevSec = sec;
 		p = new Particle(width/2,0);
 		particleArray.push(p);
-		println(particleArray.length);
 	}
 
 	for (var i = 0; i < particleArray.length; i++) {
 		particleArray[i].update();
-		particleArray[i].collide(t);
-		if (particleArray[i].collided == true){
+		particleArray[i].collide(myTree);
+		particleArray[i].display();
+		if (particleArray[i].collided === true){
+			println("collide");
+			myTree.nodes.push(createVector(particleArray[i].pos.x,particleArray[i].pos.y));
 			particleArray.splice(i, 1);
 		}
-		particleArray[i].display();
 	}
+	
+	myTree.display();
+
 } //end of draw
 
 
-//Particle Object
+//////////////////////////////////////////Particle Object///////////////////////////////////
 function Particle(x, y) {
 	this.pos = createVector(x, y);
-	this.diameter = 3;
+	this.diameter = 5;
 	this.collided = false;
 	// this.acc = acc;
 
+///////////////////////////
 	this.update = function() {
-		this.pos.x += round(random(-1, 1)) * pStep;
 		
-		if (this.pos.y <= height*0.5){
-		this.pos.y += round(random(0, 1)) * pStep;
-		}
-		else {this.pos.y += round(random(0, -1)) * pStep;}
+		this.pos.x += random(-1, 1) * pStep;
+		this.pos.y += random(-0.9, 1) * pStep;
+		
+		//check bounds
+		if (this.pos.x <= 0) {this.pos.x = 0}
+		if (this.pos.x >= width) {this.pos.x = width}
+		if (this.pos.y <= 0) {this.pos.y = 0}
+		if (this.pos.y >= height) {this.pos.y = height}
+		
 	}; //end update method
 
+////////////////////////////
 	this.display = function() {
 			fill(255);
 			ellipse(this.pos.x, this.pos.y, this.diameter, this.diameter);
 		} //end particle display method
 		
+////////////////////////////////		
 		this.collide = function(tree) {
 			for (var i = 0; i < tree.nodes.length; i++) {
 				if ( dist(this.pos.x,this.pos.y,tree.nodes[i].x,tree.nodes[i].y) <= this.diameter) {
 					this.collided = true;
-					tree.nodes.push(createVector(this.pos.x,this.pos.Y));
 				}//end distance check
 			}//end for loop
 		}//end particle collide method
 
 } //end of particle object
 
-//Tree Object
+///////////////////////////////////////////////Tree Object////////////////////////////////////
 function Tree(startX,startY){
 	this.nodes = [createVector(startX, startY)];
+	this.diameter = 5;
 
+///////////////////////////
 this.display = function() {
-			fill(255);
-			ellipse(this.pos.x, this.pos.y, this.diameter, this.diameter);
-}//end tree display
-
+	for (var i = 0; i < this.nodes.length; i++) {
+			fill(0,random(150,255),0);
+			ellipse(this.nodes[i].x, this.nodes[i].y, this.diameter, this.diameter);
+	}//end for loop
+}//end tree display method
 }//end of tree object
 
 
