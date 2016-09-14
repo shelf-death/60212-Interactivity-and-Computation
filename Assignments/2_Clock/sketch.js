@@ -58,6 +58,9 @@ function draw() {
   
   sec = second(); //this MUST come after x y calculations
   cHour = hour();
+  if (cHour > 12){ cHour -= 12;}
+  if (cHour === 0){ cHour = 12;}
+  
   
   //Add a new particle every "tick" of a second
   if (prevSec != sec) {
@@ -84,8 +87,8 @@ function draw() {
   myTree.display();
   
   //Render number of orbs based on hour
-  for (var o = 0; o < hour(); o++) {
-    orbArray[o].display(); //update first
+  for (var h = 0; h < hour(); h++) {
+    orbArray[h].display(); //update first
   }
 } //end of draw
 
