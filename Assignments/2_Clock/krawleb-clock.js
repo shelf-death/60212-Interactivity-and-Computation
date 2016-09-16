@@ -56,10 +56,18 @@ function draw() {
     orbArray[o].update(); //update first
   }
   
-  sec = second(); //this MUST come after x y calculations
-  cHour = hour();
-  if (cHour > 12){ cHour -= 12;}
-  if (cHour === 0){ cHour = 12;}
+  
+  //Time things
+  if (minute() === 0 && second() === 0){ //This resets on the hour
+    background(255);
+    particleArray = [];
+    myTree.nodes = [];
+  }  
+  
+  sec = second(); //this MUST come after x y calculations because science
+  cHour = hour(); 
+  if (cHour > 12){ cHour -= 12;} //converts to 12 hour time
+  if (cHour === 0){ cHour = 12;} //edge case for 12 at night
   
   
   //Add a new particle every "tick" of a second
@@ -90,6 +98,7 @@ function draw() {
   for (var h = 0; h < hour(); h++) {
     orbArray[h].display(); //update first
   }
+  
 } //end of draw
 
 
@@ -107,10 +116,10 @@ function Particle(x, y) {
     this.pos.y += random(-1, 1) * pStep;
 
     //check bounds of particles against canvas
-    if (this.pos.x <= 0) { this.pos.x = 0 }
-    if (this.pos.x >= width) { this.pos.x = width }
-    if (this.pos.y <= 0) { this.pos.y = 0 }
-    if (this.pos.y >= height) { this.pos.y = height }
+    if (this.pos.x <= margin/2) { this.pos.x = margin/2 }
+    if (this.pos.x >= width-margin/2) { this.pos.x = width-margin/2 }
+    if (this.pos.y <= margin/2) { this.pos.y = margin/2 }
+    if (this.pos.y >= height-margin/2) { this.pos.y = height-margin/2 }
 
   }; //end particle update method
 
