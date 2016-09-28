@@ -2,7 +2,6 @@ import peasy.*;
 import peasy.org.apache.commons.math.*;
 import peasy.org.apache.commons.math.geometry.*;
 import peasy.test.*;
-
 import processing.pdf.*;
 
 PeasyCam cam;
@@ -13,9 +12,9 @@ ArrayList<Node> nodes = new ArrayList<Node>();
 //Array of Path objects, which holds paths to be drawn.
 ArrayList<Path> paths = new ArrayList<Path>();
 
-int numNodes = 900;
-int subWide = 100;
-int subTall = 100;
+int numNodes = 400;
+int subWide = 30;
+int subTall = 30;
 
 float minDist;
 float nearestX,nearestY,nearestZ;
@@ -23,27 +22,22 @@ float nearestX,nearestY,nearestZ;
 float margin = 30;
 float jitter = 10;
 float rad = 100;
-//Note to self: instead of doing this on a grid, 
-//consider generating points using poisson disc
-
-//Add margin when you can
-//Also this is dope: http://matsysdesign.com/tag/parametric/
-
+float ns = 0.2;
 /////////////////////////////SETUP//////////////////////////
 void setup(){
   //Visual Things
-  size(850,1100,P3D);
+  size(900,600,P3D);
   strokeWeight(0.5);
   noFill();
   rectMode(CORNERS);
   //camera things
   cam = new PeasyCam(this, 100);
-  cam.setMinimumDistance(0);
+  cam.setMinimumDistance(150);
   cam.setMaximumDistance(400);
   
   //Generate Nodes
   for (int i = 0; i < numNodes; i++){
-    Node n = new Node(rad,random(0,2*PI),random(0,2*PI));
+    Node n = new Node(rad,random(0,PI*2),random(0,PI*2));
     nodes.add(n);
   }//end nodes loop
   println("Nodes: "+nodes.size());
@@ -53,8 +47,9 @@ void setup(){
     for (int row = 0; row < subWide; row++){
       minDist = 99999999;
       float cRad = rad;
-      float cTheta = random(0,2*PI);
-      float cPhi = random(0,2*PI);
+      float cTheta = random(0,PI*2);
+      float cPhi = random(0,PI*2);
+      //float cRad = noise(cTheta*ns,cPhi*ns)*rad/2+rad/2;
       float cx = cRad*sin(cTheta)*cos(cPhi);
       float cy = cRad*sin(cTheta)*sin(cPhi);
       float cz = cRad*cos(cTheta);
@@ -75,29 +70,25 @@ void setup(){
     }//end row
   }//end col
   println("Paths: "+paths.size());
-
 } // end setup
-
 /////////////////////////////DRAW//////////////////////////
 void draw(){
   if (savePDF == true){
     beginRaw(PDF, "export.pdf");
   }
-  
-  
   background(255);
   //Iterate over path array drawing lines
   for (int p = 0; p < paths.size(); p++){
-    //pushMatrix();
-    //translate(0,0,paths.get(p).start.z);
-    //rect(paths.get(p).start.x,paths.get(p).start.y,
-    //paths.get(p).end.x,paths.get(p).end.y);
-    //popMatrix();
-    line(paths.get(p).start.x,paths.get(p).start.y,paths.get(p).start.z,
-    paths.get(p).end.x,paths.get(p).end.y,paths.get(p).end.z);
+    pushMatrix();
+    translate(0,0,paths.get(p).start.z);
+    rect(paths.get(p).start.x,paths.get(p).start.y,
+    paths.get(p).end.x,paths.get(p).end.y);
+    popMatrix();
+    //line(paths.get(p).start.x,paths.get(p).start.y,paths.get(p).start.z,
+    //paths.get(p).end.x,paths.get(p).end.y,paths.get(p).end.z);
     //pushMatrix();
     //translate(paths.get(p).start.x,paths.get(p).start.y,paths.get(p).start.z);
-    //box(10);
+    //box(sqrt(paths.get(p).distance));
     //popMatrix();
   }//end line loop
   if (savePDF == true){
@@ -105,14 +96,9 @@ void draw(){
   savePDF = false;
   }
 }//end draw
-
 /////////////////////////////KEYPRESSED//////////////////////////
-void keyPressed() {
-if (key == 'p'){
-savePDF = true;
-}
+void keyPressed() { if (key == 'p') { savePDF = true; }
 }//end keypressed
-
 /////////////////////////////NODE//////////////////////////
 class Node {
   PVector pos;
@@ -120,7 +106,7 @@ class Node {
   Node (float r, float theta, float phi){
     pos = new PVector(r*sin(theta)*cos(phi),r*sin(theta)*sin(phi),r*cos(theta));
   }
-}
+}//end node class
 /////////////////////////////PATH//////////////////////////
 class Path {
   PVector start,end;
@@ -131,4 +117,4 @@ class Path {
     end = new PVector (ex,ey, ez);
     distance = dist(sx, sy, sz,ex,ey, ez);
   }
-}
+}//end path class
