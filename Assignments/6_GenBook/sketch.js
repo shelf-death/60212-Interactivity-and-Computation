@@ -14,9 +14,12 @@ var nlp = window.nlp_compromise;
 //for keeping references to index for swapping
 var randLine,randWord,firstWord;
 
+//NodeJS stuff
+wn = require("wordnetjs");
+
 /////////////////////////Preload/////////////////////
 function preload() {
-	sText = loadStrings('texts/Stevens.txt');
+	sText = loadStrings('texts/rose.txt');
 }//end preload
 
 //////////////////////////Setup//////////////////////
