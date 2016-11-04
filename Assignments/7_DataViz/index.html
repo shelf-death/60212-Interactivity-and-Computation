@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+  color: #bbb;
+}
+
+.axis{
+	color: #bbb;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #bbb;
+  shape-rendering: crispEdges;
+}
+
+.dot {
+  stroke: #000;
+}
+
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 880 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([1, 100]);
+
+var index = d3.scale.linear()
+	.range([0,height])
+	.domain([0-(27000*.05),27000*1.05]);
+
+var color = d3.scale.ordinal()
+  .domain(["Customer", "Subscriber", "Daily"])
+  .range(["blue", "magenta" , "yellow"]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(index)
+    .orient("left");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.tsv("data/2016-Q3/HRR2016Q3.tsv", function(error, data) {
+  if (error) throw error;
+
+  data.forEach(function(d) {
+    d.Tripduration = +d.Tripduration;
+    d.Index = +d.Index;
+  });
+
+  x.domain([-0.05,1.05]);
+  y.domain([0,776338]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("Time of day");
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Rides (Chronological)")
+
+  svg.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", function(d) { return y(d.Tripduration); })
+      .attr("cx", function(d) { return x(d.Startdec+d.Tripduration); })
+      .attr("cy", function(d) { return index(d.Index); })
+      .style("fill", function(d) { return color(d.Usertype); })
+      .style("fill-opacity",0.15)
+      .style("stroke-width",0);
+
+  // svg.selectAll(".dot")
+  //     .data(data)
+  //   .enter().append("line")
+  //     .attr("x1", function(d) { return x(d.Startdec); })
+  //     .attr("y1", function(d) { return index(d.Index); })
+  //     .attr("x2", function(d) { return x(d.Stopdec); })
+  //     .attr("y2", function(d) { return index(d.Index); })
+  //     .style("stroke", function(d) { return color(d.Usertype); })
+  //     .style("stroke-width","0.5")
+  //     .style("stroke-opacity","0.1");
+
+
+  // var legend = svg.selectAll(".legend")
+  //     .data(color.domain())
+  //   .enter().append("g")
+  //     .attr("class", "legend")
+  //     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  // legend.append("rect")
+  //     .attr("x", width - 18)
+  //     .attr("width", 18)
+  //     .attr("height", 18)
+  //     .style("fill", color);
+
+  // legend.append("text")
+  //     .attr("x", width - 24)
+  //     .attr("y", 9)
+  //     .attr("dy", ".35em")
+  //     .style("text-anchor", "end")
+  //     .text(function(d) { return d; });
+
+});
+
+</script>
