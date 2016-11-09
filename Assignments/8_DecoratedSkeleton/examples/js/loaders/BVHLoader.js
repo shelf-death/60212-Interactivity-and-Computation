@@ -165,11 +165,11 @@ THREE.BVHLoader.prototype = {
 				default:
 					throw "invalid channel type";
 
-				currentFrame.push(keyframe);
+				// currentFrame.push(keyframe);
 
 				}
 
-			_this.rawJointArray.push(currentFrame);
+			// _this.rawJointArray.push(currentFrame);
 
 			}
 
@@ -340,6 +340,12 @@ THREE.BVHLoader.prototype = {
 					var frame = bone.frames[ j ];
 
 					times.push( frame.time );
+
+					_this.rawJointArray.push(
+					[ 	frame.position.x + bone.offset.x ,
+					 	frame.position.y + bone.offset.y ,
+					  	frame.position.z + bone.offset.z ]
+					)
 
 					// the animation system animates the position property,
 					// so we have to add the joint offset to all values
