@@ -12,7 +12,7 @@ boolean renderExtras = false;
 void setup() {
   size( 1280, 720, P3D );
   cam = new PeasyCam(this, 100);
-  cam.lookAt(600, 0, 0);
+  cam.lookAt(650, 200, 0);
   cam.setMinimumDistance(50);
   cam.setMaximumDistance(1000);
   cam.setDistance(500);
