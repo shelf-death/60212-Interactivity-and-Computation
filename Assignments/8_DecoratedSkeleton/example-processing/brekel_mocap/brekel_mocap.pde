@@ -7,6 +7,7 @@ PeasyCam cam;
 PBvh myBrekelBvh;
 
 boolean renderExtras = false;
+boolean bDrawMeat = true; 
 
 //------------------------------------------------
 void setup() {
