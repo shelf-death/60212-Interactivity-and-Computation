@@ -1,26 +1,36 @@
-var eu = [6,10];																										//Euclidian Rhythm
+var eu = [7,11];																									//Euclidian Rhythm
 var d = Math.floor(eu[1]/eu[0]);  								//Divisor
-var r = eu[1]%eu[0];  																				//Remainder
+var r = eu[1]%eu[0];																			//Remainder
 if (eu[0] > (eu[1]/2)) { r = eu[1]-eu[0]}	//If the value doesn't divide once, remainder is difference
-var beat = [];																												//The beat array
+var beat = [];																											//The beat array
 var shift = 0;
 
 var mySound, myPhrase, myPart;
 
 var notes =  ["c","d","e","f","g","a","b"];
-var noteScale = [72, 74, 76, 77, 79, 81, 83]; // 48 is base note
+var rootNote = 48;
+var bassDivider = 1.25;
+var noteScale = [rootNote, rootNote+2, rootNote+4, rootNote+5, rootNote+7, rootNote+9, rootNote+11]; // 48 is base note
 var currentNote = 0;
 var currentNote2 = 0;
 
+var margin = 20;
 
-var list = []; 
-var s = "golan levin is lit af af af studio of creative inquiry"
+var list = [];
+var s = "Part 2. A Networked Object This assignment is due in the afternoon of class on Friday, November 18. Census historian James C. Scott has pointed out that measurement is a political act. Data artist Natalie Jeremijenko collects measurements in order to prompt evidence-driven discussion. And in the weird world of quantum physics, the term “observer effect” refers to the idea that the very act of measurement itself alters the subject being measured. Each of these is an example of how measurement can be a meaningful act that alters the world and the way we see it. Working in pairs, create an object or device that communicates with the Internet. This might be: A measuring device or monitoring system, which reports on a measurement of the world at regular intervals. A sensor that detects an event of interest, and sends a signal to report it online when it happens A device which physically displays or visualizes a piece of online information, or which is triggered by an online event. Your objective is to: measure or visualize something interesting, and/or measure or visualize something in an interesting way, and/or create a interesting provocation by bringing an uncommon measurement or piece of information to our attention. To do this, you will use the LittleBits system of sensors and actuators, plus the IFTTT service. You may also wish to use Temboo.com to access interesting APIs and data streams. Please take a moment to familiarize yourself with these systems.";
 ///////////////////////////////////Preload/////////////////////////////////////////
 function preload() {
   
 }
 ///////////////////////////////////Setup/////////////////////////////////////////
 function setup() {
+
+	createCanvas(250,100);
+	rectMode(CENTER);
+	// noStroke();
+
+	c1 = color(255, 255, 0);
+	c2 = color(0, 255, 255);
 	
 	//Web MIDI Object Check
 	// request MIDI access
@@ -45,36 +55,60 @@ function setup() {
 	////////end of MIDI shit
 	
 	osc = new p5.Oscillator('triangle');
-	// osc.start();
-	frameRate(8);
+	osc.start();
+	frameRate(10);
 	
 	osc2 = new p5.Oscillator('sine');
-	osc2.start();
+	// osc2.start();
 	
 	calculateEuclid(eu,beat,shift);
 	textToBeat(s,notes,list);
-	
-	
-	// myPart.start();
 }//end setup
 
 ///////////////////////////////////Draw///////////////////////////////////////////
 function draw() {
   background(0);
   
-  freq = midiToFreq(list[currentNote]);
-  freq2 = midiToFreq(beat[currentNote2])
-  osc.freq(freq);
-  osc2.freq(freq2);
   currentNote++;
   currentNote2++;
+
   if (currentNote >= list.length){
     currentNote = 0;
+    // osc.freq(0);
   }
   if (currentNote2 >= beat.length){
     currentNote2 = 0;
   }
   
+  freq = midiToFreq(list[currentNote]);
+  freq2 = midiToFreq(beat[currentNote2])
+
+  if (list[currentNote] == 0){
+  	freq = 0;
+  }
+
+  osc.freq(freq);
+  osc2.freq(freq2);
+
+  //draw bass beat debugger
+  for (var beats = 0; beats < beat.length; beats++) {
+  	fill(160);
+  	if (beat[beats] == rootNote/bassDivider){fill(60)}
+  	if (beats == currentNote2){fill(255)}
+  	//bass rect
+  	rect(
+  		(width-margin/2)/beat.length*beats+margin,
+  		height-width/beat.length,width/beat.length,width/beat.length);
+  	//melody rect
+  	fill(0);
+  	var mapped = map(list[currentNote+beats%list.length],noteScale[0],noteScale[6],0,1);
+  	fill( lerpColor(c1,c2,mapped));
+  	rect(
+  		(width-margin/2)/beat.length*beats+margin,
+  		height/2-width/beat.length,width/beat.length,width/beat.length);
+  }//end visualization for loop
+
+
 }//end draw
 ///////////////////////////////////makeSound///////////////////////////////////////////
 function makeSound(time, playbackRate) {
@@ -85,33 +119,39 @@ function makeSound(time, playbackRate) {
 ///////////////////////////////////textToBeat///////////////////////////////////////////
 function textToBeat(words,noteList,melody) {
 	for (var i = 0; i<words.length; i++){
-    for (var j = 0; j<noteList.length; j++){
-      if (words[i] == noteList[j]){
-        melody.push(noteScale[j]);
-      }
-    }
-    if (melody[i] != 1){
-      melody.push(melody[i-1]); //base note    
-    }
-  }
+		var isItANote = false;
+    	for (var j = 0; j<noteList.length; j++){
+      		if (words[i] == noteList[j]){
+        		melody.push(noteScale[j]);
+        		isItANote = true;
+      		}
+    	}
+
+    	if (isItANote == false){
+    		if (words[i] == " "){
+    			// melody.push(0);
+    			melody.push(melody[i-1]);
+    		}
+    		else{melody.push(melody[i-1]);} //base note 
+    	}
+  	}
   console.log(melody);
 }
 ///////////////////////Calculate Euclidian Rhythms///////////////////////////
 function calculateEuclid(euclid,beatArray,shiftAmt) {
   for (var i = 0; i < euclid[0]; i++){
   	
-  	beatArray.push(60); 																									//initialize with beats
+  	beatArray.push(rootNote/bassDivider);																						//initialize with beats
   	
   	if (d > 1) {
 	  	for (var j = 0; j < d-1; j++ ){
-	  		beatArray.push(0); 																							//adds d-1 rests after every beat
+	  		beatArray.push(rootNote/bassDivider-4); 																							//adds d-1 rests after every beat
 	  	}																																										//end inner for
   	}																																											//end d > 1
   	
   	if (i < r){ 
-  		beatArray.push(0);																								 //add extra rest on remainders
+  		beatArray.push(rootNote/bassDivider-4);																								 //add extra rest on remainders
   	} 											
-  	
   }																																												//end for
   rotateArray(beatArray,shift);
   console.log(beat);
