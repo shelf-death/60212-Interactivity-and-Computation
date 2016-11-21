@@ -1,0 +1,29 @@
+Shepherd Design Document:
+
+// Index //
+
+—— Conceptual Overview
+—— Mechanics Desctiption
+—— System Architecture
+—— Technical Notes
+
+
+// Conceptual Overview //
+
+—— coming soon ——
+
+// Mechanics Desciption //
+
+—— coming soon ——
+
+// System Architecture //
+
+Vassal Class:
+—— Generic Vassal
+———— Behaviors
+—————— MoveToLocation
+—————— GetLocation
+———————— Get Shepherd Location
+———————— Get Nearest (Friendly) Vassal Location
+—— Shepherd Singleton
+

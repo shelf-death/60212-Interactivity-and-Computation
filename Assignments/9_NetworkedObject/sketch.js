@@ -1,4 +1,4 @@
-var eu = [7,11];																									//Euclidian Rhythm
+var eu = [3,11];																									//Euclidian Rhythm
 var d = Math.floor(eu[1]/eu[0]);  								//Divisor
 var r = eu[1]%eu[0];																			//Remainder
 if (eu[0] > (eu[1]/2)) { r = eu[1]-eu[0]}	//If the value doesn't divide once, remainder is difference
@@ -17,7 +17,7 @@ var currentNote2 = 0;
 var margin = 20;
 
 var list = [];
-var s = "Part 2. A Networked Object This assignment is due in the afternoon of class on Friday, November 18. Census historian James C. Scott has pointed out that measurement is a political act. Data artist Natalie Jeremijenko collects measurements in order to prompt evidence-driven discussion. And in the weird world of quantum physics, the term “observer effect” refers to the idea that the very act of measurement itself alters the subject being measured. Each of these is an example of how measurement can be a meaningful act that alters the world and the way we see it. Working in pairs, create an object or device that communicates with the Internet. This might be: A measuring device or monitoring system, which reports on a measurement of the world at regular intervals. A sensor that detects an event of interest, and sends a signal to report it online when it happens A device which physically displays or visualizes a piece of online information, or which is triggered by an online event. Your objective is to: measure or visualize something interesting, and/or measure or visualize something in an interesting way, and/or create a interesting provocation by bringing an uncommon measurement or piece of information to our attention. To do this, you will use the LittleBits system of sensors and actuators, plus the IFTTT service. You may also wish to use Temboo.com to access interesting APIs and data streams. Please take a moment to familiarize yourself with these systems.";
+var s = "This is an intermediate level course in creative coding, interactive new-media art, and computational design. Ideal as a second course for students who have already had one semester of elementary programming (in any language), this course is for you if you’d like to use code to make art, design, architecture, and/or games — AND you’re already fluent in the basics of programming, such as for() loops, if() statements, and arrays.";
 ///////////////////////////////////Preload/////////////////////////////////////////
 function preload() {
   
