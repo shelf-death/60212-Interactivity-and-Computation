@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Units\Scripts\AICharacterControl.cs" />
+     <Compile Include="Assets\Units\Scripts\InitializeLevel.cs" />
      <Compile Include="Assets\Units\Scripts\Shepherd.cs" />
      <Compile Include="Assets\Units\Scripts\ThirdPersonCharacter.cs" />
      <Compile Include="Assets\Units\Scripts\ThirdPersonUserControl.cs" />
