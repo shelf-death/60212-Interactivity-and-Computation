@@ -11,7 +11,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public ThirdPersonCharacter character { get; private set; } // the character we are controlling
         public Transform target;                                    // target to aim for
 
-
         private void Start()
         {
             // get the components on the object we need ( should not be null due to require component so no need to check )
@@ -22,10 +21,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 	        agent.updatePosition = true;
 
 			//Subscribe to event
-			Shepherd.setNavigationTarget += TargetUpdated;
+			Shepherd.followShepherd += TargetUpdated;
         }
-
-
+			
         private void Update()
         {
             if (target != null)
@@ -37,13 +35,22 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 character.Move(Vector3.zero, false, false);
         }
 			
-		public void TargetUpdated( GameObject unit){
-			SetTarget (unit.transform);
+		public void TargetUpdated( GameObject unit, bool noTarget){
+			
+			if (!noTarget) {
+				SetTarget (unit.transform);
+			} 
+			else {
+				SetTarget (this.transform);
+			}
+
 		}
 
-        public void SetTarget(Transform target)
+        public void SetTarget(Transform newTarget)
         {
-            this.target = target;
+			if (newTarget != null) {
+				this.target = newTarget;
+			} 
         }
     }
 }
