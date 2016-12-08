@@ -29,6 +29,13 @@ public class UnitHealthManager : MonoBehaviour {
 	
 	}
 
+	void OnDestroy() {
+
+		//Unsubscribe to event
+		flockCombatManager.damageDealt -= damageEventRecieved;
+
+	}
+
 	void damageEventRecieved (GameObject attacker, GameObject victim, float damage) {
 
 		if (victim != null && this.gameObject != null) {

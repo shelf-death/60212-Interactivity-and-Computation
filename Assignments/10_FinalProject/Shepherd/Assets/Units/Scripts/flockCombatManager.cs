@@ -46,27 +46,14 @@ public class flockCombatManager : MonoBehaviour {
 
 		if (attacking == true) {
 			foreach (Transform vassal in this.gameObject.transform) {
-				if (vassal.gameObject != null) {
-					distanceDamageCheck (vassal.gameObject, enemyFlock);
+				if (vassal != null) {
+					if (vassal.gameObject) {
+						distanceDamageCheck (vassal.gameObject, enemyFlock);
+					}
 				}
 			}
 		}
 	} //end update
-
-//	void LateUpdate () {
-//		foreach (Transform vassal in this.gameObject.transform) {
-//			if (vassal.GetComponent<UnitHealthManager> ().dying == true) {
-//				deadVassals.Add (vassal.gameObject);
-//			}
-//		}
-//		for (int i = deadVassals.Count-1; i >=0; i--)
-//		{
-//			Destroy(deadVassals[i]);
-//			Debug.Log ("deleted "+ i);
-//		}
-//		deadVassals.Clear();
-//
-//	}//end late update
 		
 	void AttackToggled(string team, bool _attacking) {
 		if (team == this.gameObject.tag) {
@@ -77,6 +64,7 @@ public class flockCombatManager : MonoBehaviour {
 	void DeleteDeadVassal(GameObject deadVassal) {
 		if (deadVassal.tag == this.gameObject.tag) {
 			deadVassal.transform.parent = null;
+			print (deadVassal.name);
 			Destroy (deadVassal);
 		}
 	}
