@@ -36,12 +36,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         }
 			
 		public void TargetUpdated( GameObject unit, bool noTarget){
-			
-			if (!noTarget) {
-				SetTarget (unit.transform);
-			} 
-			else {
-				SetTarget (this.transform);
+
+			if (unit != null) {
+				if (!noTarget) {
+					SetTarget (unit.transform);
+				} else {
+					SetTarget (this.transform);
+				}
 			}
 
 		}

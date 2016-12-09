@@ -11,7 +11,7 @@ public class flockCombatManager : MonoBehaviour {
 	public float combatDistance = 3.0f;
 
 	public GameObject enemyFlock;
-	public List<GameObject> deadVassals;
+	public List<UnitHealthManager> Vassals = new List<UnitHealthManager>();
 
 	//Function called by Shepherd to move flock
 	public static void AttackTarget (GameObject attacker, GameObject victim,float damageAmt)
@@ -38,6 +38,8 @@ public class flockCombatManager : MonoBehaviour {
 		//Subscribe to combat toggle event
 		UnityStandardAssets.Characters.ThirdPerson.ThirdPersonUserControl.toggleAttackState += AttackToggled;
 		UnitHealthManager.vassalDied += DeleteDeadVassal;
+
+		Vassals.AddRange(GetComponentsInChildren<UnitHealthManager>());
 	
 	}
 	
@@ -45,12 +47,10 @@ public class flockCombatManager : MonoBehaviour {
 	void Update () {
 
 		if (attacking == true) {
-			foreach (Transform vassal in this.gameObject.transform) {
-				if (vassal != null) {
+			foreach (var vassal in Vassals) {
 					if (vassal.gameObject) {
 						distanceDamageCheck (vassal.gameObject, enemyFlock);
 					}
-				}
 			}
 		}
 	} //end update
@@ -63,8 +63,6 @@ public class flockCombatManager : MonoBehaviour {
 
 	void DeleteDeadVassal(GameObject deadVassal) {
 		if (deadVassal.tag == this.gameObject.tag) {
-			deadVassal.transform.parent = null;
-			print (deadVassal.name);
 			Destroy (deadVassal);
 		}
 	}

@@ -25,8 +25,9 @@ public class ArrowController : MonoBehaviour {
 		}
 
 		public void HoverTarget( GameObject unit, bool noTarget){
-			
-			target = unit.transform;
+			if (unit != null) {
+				target = unit.transform;
+			}
 		
 		}
 }
